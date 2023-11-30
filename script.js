@@ -1,11 +1,16 @@
+const myWorker = new Worker("worker.js");
 let amountQuestion = 10;
 let category = 9;
 let difficulty = "easy";
 const result = document.querySelector(".detailed-question");
 const possibleAns = document.querySelector(".answers");
+const additonalInfo = document.querySelector(".info-for-answers");
 let correctAnswerArr = [];
 let correctAns = 0;
 let wrongAns = 0;
+let failedAnsr = [];
+let correctedAns = [];
+
 const form = document.querySelector(".main-form");
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -59,18 +64,18 @@ form.addEventListener("submit", (e) => {
 const displayQuiz = (data) => {
   let currentQuestionIndex = 0;
   const showQuestion = (index) => {
-    const allQ = data.results;
-    localStorage.setItem("allQ", JSON.stringify(allQ));
-    const loc = localStorage.getItem("allQ");
-    const q = JSON.parse(loc);
-    console.log(q[0]);
-    const question = data.results[index];
-    localStorage.setItem("question", question.question);
+    // const allQ = data.results;
+    localStorage.setItem("allQuestions", JSON.stringify(data.results));
+    const allQuestions = localStorage.getItem("allQuestions");
+    const question = JSON.parse(allQuestions);
+    const currQ = question[index];
+    // const question = data.results[index];
+    localStorage.setItem("question", currQ.question);
 
     // console.log(question)
     // object
     const answersContainer = document.createElement("div");
-    const allAnswers = [question.correct_answer, ...question.incorrect_answers];
+    const allAnswers = [currQ.correct_answer, ...currQ.incorrect_answers];
     // console.log(allAnswers)
     // array
     const messyAnswers = messyArr(allAnswers);
@@ -95,7 +100,7 @@ const displayQuiz = (data) => {
     });
 
     result.innerHTML = `<span class="q-number">${index + 1}.</span> ${
-      question.question
+      currQ.question
     }`;
     // console.log(result)
     possibleAns.innerHTML = "";
@@ -114,14 +119,18 @@ const displayQuiz = (data) => {
 
       if (selectedAnswer) {
         const userAnswer = selectedAnswer.value;
-        const isCorrect = userAnswer === question.correct_answer;
+        const isCorrect = userAnswer === currQ.correct_answer;
         if (isCorrect) {
           correctAns++;
-          correctAnswerArr.push(question.correct_answer);
+
+          correctAnswerArr.push(currQ.question);
+          localStorage.setItem("correctAns", JSON.stringify(correctAnswerArr));
         } else {
           wrongAns++;
+          failedAnsr.push(currQ);
+          // correctedAns.push(currQ.correct_answer)
         }
-        displayResult(isCorrect);
+        displayResult(isCorrect, allQuestions);
       } else {
         alert("Please select one answer.");
       }
@@ -130,7 +139,7 @@ const displayQuiz = (data) => {
     answersContainer.appendChild(checkAnswerBtn);
   };
 
-  const displayResult = (isCorrect) => {
+  const displayResult = (isCorrect, allQuestions) => {
     const resultMessage = document.createElement("p");
     resultMessage.innerText = isCorrect ? "Correct!" : "Wrong!";
 
@@ -147,6 +156,10 @@ const displayQuiz = (data) => {
         result.innerHTML = `Quiz completed! Number of correct answers: ${correctAns} ;Number of wrong answers ${wrongAns}`;
         possibleAns.innerHTML = "";
         console.log(correctAnswerArr);
+        console.log(failedAnsr);
+        failedAnsr.forEach((q) => {
+          additonalInfo.innerHTML += `Wrong Question/s :\n <li>${q.question} </li>\n   Correct answer: ${q.correct_answer}\n `;
+        });
       }
     });
 
