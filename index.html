@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz APP</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz APP</h1>
+        <form class="main-form">
+            <label for="category">Category</label>
+            <select name="category" id="category">
+                <option value="general-knowledge">General Knowledge</option>
+                <option value="history">History</option>
+                <option value="politics">Politics</option>
+            </select>
+            <label for="difficulty">Difficulty</label>
+            <select name="difficulty" id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <label for="question-number">Amount Question</label>
+            <select name="question-number" id="question-number">
+                <option value="ten">10</option>
+                <option value="twenty">20</option>
+                <option value="thirty">30</option>
+            </select>
+            <button class="show-question">Generate Question</button>
+        </form>
+        <div class="questions">
+            <h2 class="q-header">Questions</h2>
+            <p class="detailed-question"></p>
+            <div class="answers"> 
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
