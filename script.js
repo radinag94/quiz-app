@@ -1,4 +1,4 @@
-const myWorker = new Worker("worker.js");
+const worker = new Worker("worker.js", { type: "module" });
 let amountQuestion = 10;
 let category = 9;
 let difficulty = "easy";
@@ -181,6 +181,12 @@ const displayQuiz = (data) => {
             newGame();
           }
         });
+        additonalInfo.innerHTML += `<button class='download-results'>Download Results</button>`;
+        additonalInfo.addEventListener("click", (e) => {
+          if (e.target.classList.contains("download-results")) {
+            downloadResults();
+          }
+        });
       }
     });
 
@@ -210,5 +216,18 @@ const newGame = () => {
   localStorage.removeItem("question");
   questionContainer.innerHTML = "";
   additonalInfo.innerHTML = "";
+};
+
+const downloadResults = () => {
+  const numOfCorrectAns = JSON.parse(localStorage.getItem("numOfCorrectAns"));
+  const numOfWrongAns = JSON.parse(localStorage.getItem("numOfCorrectAns"));
+  worker.onmessage = (e) => {
+    const blob = e.data;
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "QuizScore.zip";
+    link.click();
+  };
+  worker.postMessage({ numOfCorrectAns, numOfWrongAns });
 };
 startGame();
