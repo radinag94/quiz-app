@@ -1,0 +1,104 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Cabin', sans-serif;
+  font-family: 'Hedvig Letters Serif', serif;
+  font-family: 'Josefin Sans', sans-serif;
+  font-family: 'Merriweather', serif;
+
+}
+body {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-image: url("./img/towfiqu-barbhuiya-oZuBNC-6E2s-unsplash.jpg");
+}
+
+h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+.main-form {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.q-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 20px;
+}
+
+.question-container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+.detailed-question {
+    padding: 20px;
+}
+.question-section {
+ background-color: rgb(227, 171, 187);
+ opacity: 0.9;
+}
+
+#answers-container{
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.show-question {
+    background-color: pink;
+    height: 3vh;
+    border-radius: 20px;
+    padding: 5px;
+}
+.show-question:hover {
+    background-color: rgb(239, 129, 206);
+}
+#options {
+    margin-left: 20px;
+}
+#options:hover {
+    background-color: rgb(145, 116, 240);
+}
+
+#check-answer-btn {
+    background-color: pink;
+    border-radius: 20px;
+    padding: 5px;
+    width: 20vh;
+}
+#check-answer-btn:hover {
+    background-color: rgb(117, 94, 250);
+}
+.answers{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+#result-message {
+    margin: 10px;
+}
+#next-btn {
+    width: 20vh;
+    border-radius: 20px;
+    padding: 5px;
+    background-color: rgb(54, 47, 251);
+}
+.info-for-answers {
+    display: flex;
+    flex-direction: column;
+}
