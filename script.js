@@ -75,6 +75,7 @@ const displayQuiz = (data) => {
     // console.log(question)
     // object
     const answersContainer = document.createElement("div");
+    answersContainer.id = 'answers-container'
     const allAnswers = [currQ.correct_answer, ...currQ.incorrect_answers];
     // console.log(allAnswers)
     // array
@@ -85,8 +86,9 @@ const displayQuiz = (data) => {
     messyAnswers.forEach((answer) => {
       const label = document.createElement("label");
       const input = document.createElement("input");
+      input.id = 'choose-answer'
       const span = document.createElement("span");
-
+span.id ='options'
       input.type = "radio";
       input.name = "answer";
       input.value = answer;
@@ -110,6 +112,7 @@ const displayQuiz = (data) => {
 
     // create chechAnswerBtn and addEventlistener
     const checkAnswerBtn = document.createElement("button");
+    checkAnswerBtn.id = 'check-answer-btn'
     checkAnswerBtn.innerText = "CHECK ANSWER";
     checkAnswerBtn.addEventListener("click", () => {
       const selectedAnswer = document.querySelector(
@@ -141,6 +144,7 @@ const displayQuiz = (data) => {
 
   const displayResult = (isCorrect, allQuestions) => {
     const resultMessage = document.createElement("p");
+    resultMessage.id = 'result-message'
     resultMessage.innerText = isCorrect ? "Correct!" : "Wrong!";
 
     possibleAns.appendChild(resultMessage);
@@ -148,6 +152,7 @@ const displayQuiz = (data) => {
     // create nextBtn and addEventlistener
     const nextBtn = document.createElement("button");
     nextBtn.innerText = "Next";
+    nextBtn.id = 'next-btn'
     nextBtn.addEventListener("click", () => {
       currentQuestionIndex++;
       if (currentQuestionIndex < data.results.length) {
@@ -158,7 +163,7 @@ const displayQuiz = (data) => {
         console.log(correctAnswerArr);
         console.log(failedAnsr);
         failedAnsr.forEach((q) => {
-          additonalInfo.innerHTML += `Wrong Question/s :\n <li>${q.question} </li>\n   Correct answer: ${q.correct_answer}\n `;
+          additonalInfo.innerHTML += `Wrong Question/s :\n <li>${q.question} </li>\n   Correct answer:  ${q.correct_answer}\n `;
         });
       }
     });
