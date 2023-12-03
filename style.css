@@ -35,7 +35,9 @@ h1 {
   justify-content: center;
   padding: 20px;
 }
-
+.questions {
+  background-color: transparent;
+}
 .question-container {
   display: flex;
   align-items: center;
@@ -49,7 +51,6 @@ h1 {
 .question-section {
   background-color: rgb(227, 171, 187);
   opacity: 0.9;
-  background-color: rgb(227, 171, 187);
   opacity: 0.9;
   display: flex;
   flex-direction: column;
@@ -106,9 +107,40 @@ h1 {
   display: flex;
   flex-direction: column;
 }
-.new-game {
+.new-game,
+.download-results {
+  margin: 10px;
   width: 20vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
+}
+.new-game {
+  background-color: rgb(112, 112, 241);
+}
+.new-game:hover {
+  background-color: rgb(65, 65, 248);
+}
+.download-results {
+  background-color: rgb(149, 219, 149);
+}
+.download-results:hover {
+  background-color: rgb(60, 173, 60);
+}
+@media only screen and (max-width: 800px) {
+  .main-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .question-section {
+    display: flex;
+    padding: 20px;
+  }
+  .detailed-question {
+    padding: 0;
+    margin-bottom: 20px;
+  }
 }

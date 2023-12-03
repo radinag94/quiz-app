@@ -69,8 +69,8 @@ const displayQuiz = (data) => {
   const showQuestion = (index) => {
     localStorage.setItem("allQuestions", JSON.stringify(data.results));
     const allQuestions = localStorage.getItem("allQuestions");
-    const question = JSON.parse(allQuestions);
-    const currQ = question[index];
+    const questionArr = JSON.parse(allQuestions);
+    const currQ = questionArr[index];
     // const question = data.results[index];
     localStorage.setItem("question", currQ.question);
 
@@ -142,7 +142,7 @@ const displayQuiz = (data) => {
           // correctedAns.push(currQ.correct_answer)
         }
 
-        displayResult(isCorrect, allQuestions);
+        displayResult(isCorrect, questionArr);
       } else {
         alert("Please select one answer.");
       }
@@ -151,7 +151,7 @@ const displayQuiz = (data) => {
     answersContainer.appendChild(checkAnswerBtn);
   };
 
-  const displayResult = (isCorrect, allQuestions) => {
+  const displayResult = (isCorrect, questionArr) => {
     const resultMessage = document.createElement("p");
     resultMessage.id = "result-message";
     resultMessage.innerText = isCorrect ? "Correct!" : "Wrong!";
@@ -164,7 +164,7 @@ const displayQuiz = (data) => {
     nextBtn.id = "next-btn";
     nextBtn.addEventListener("click", () => {
       currentQuestionIndex++;
-      if (currentQuestionIndex < data.results.length) {
+      if (currentQuestionIndex < questionArr.length) {
         showQuestion(currentQuestionIndex);
       } else {
         result.innerHTML = `Quiz completed! Number of correct answers: ${correctAns} ;Number of wrong answers ${wrongAns}`;
@@ -172,7 +172,7 @@ const displayQuiz = (data) => {
         console.log(correctAnswerArr);
         console.log(failedAnsr);
         failedAnsr.forEach((q) => {
-          additonalInfo.innerHTML += `Wrong Question/s :\n <li>${q.question} </li>\n   Correct answer:  ${q.correct_answer}\n`;
+          additonalInfo.innerHTML += `<li>${q.question} </li> Correct answer:  ${q.correct_answer}`;
         });
         additonalInfo.innerHTML += `<button class='new-game'>NEW GAME</button>`;
         // const newGameB = document.querySelector('.new-game')
@@ -181,7 +181,7 @@ const displayQuiz = (data) => {
             newGame();
           }
         });
-        additonalInfo.innerHTML += `<button class='download-results'>Download Results</button>`;
+        additonalInfo.innerHTML += `<button class='download-results'>DOWNLOAD RESULTS</button>`;
         additonalInfo.addEventListener("click", (e) => {
           if (e.target.classList.contains("download-results")) {
             downloadResults();
