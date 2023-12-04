@@ -220,7 +220,7 @@ const newGame = () => {
 
 const downloadResults = () => {
   const numOfCorrectAns = JSON.parse(localStorage.getItem("numOfCorrectAns"));
-  const numOfWrongAns = JSON.parse(localStorage.getItem("numOfCorrectAns"));
+  const numOfWrongAns = JSON.parse(localStorage.getItem("numOfWrongAns"));
   worker.onmessage = (e) => {
     const blob = e.data;
     const link = document.createElement("a");
