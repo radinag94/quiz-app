@@ -2,7 +2,7 @@ import {
   BlobWriter,
   TextReader,
   ZipWriter,
-} from "https://unpkg.com/@zip.js/zip.js/index.js";
+} from "@zip.js/zip.js"
 onmessage = async (e) => {
   const { numOfCorrectAns, numOfWrongAns } = e.data;
   const text = `You answered ${numOfCorrectAns} questions correctly and ${numOfWrongAns} questions incorrectly`;

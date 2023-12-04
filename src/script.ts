@@ -1,15 +1,36 @@
+type CorrectAnswer = string[];
+type Index = number;
+type Div = HTMLDivElement;
+type Form = HTMLFormElement;
+type SelectOption = HTMLOptionElement;
+type Answer = string;
+type SelectedAnswer = HTMLInputElement;
+type FailedAnswer = Results[];
+interface Data {
+  results: Results[];
+}
+
+interface Results {
+  type: string;
+  difficulty: string;
+  category: string;
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
+}
 const worker = new Worker("worker.js", { type: "module" });
-let amountQuestion = 10;
-let category = 9;
-let difficulty = "easy";
-const result = document.querySelector(".detailed-question");
-const possibleAns = document.querySelector(".answers");
-const additonalInfo = document.querySelector(".info-for-answers");
-const questionContainer = document.querySelector(".question-section");
-let correctAnswerArr = [];
-let correctAns = 0;
-let wrongAns = 0;
-let failedAnsr = [];
+let amountQuestion: number = 10;
+let category: string | number = 9;
+let difficulty: string = "easy";
+
+const result = document.querySelector(".detailed-question") as Div;
+const possibleAns = document.querySelector(".answers") as Div;
+const additonalInfo = document.querySelector(".info-for-answers") as Div;
+const questionContainer = document.querySelector(".question-section") as Div;
+let correctAnswerArr: CorrectAnswer = [];
+let correctAns: number = 0;
+let wrongAns: number = 0;
+let failedAnsr: FailedAnswer = [];
 let correctedAns = [];
 let index = 0;
 const getData = async () => {
@@ -20,19 +41,20 @@ const getData = async () => {
     if (!response.ok) {
       throw new Error(`hhtp error ${response.status}`);
     }
-    const data = await response.json();
+    const data: Data = await response.json();
     displayQuiz(data);
   } catch (error) {
     console.log(`Not valid ${error}`);
   }
 };
-const form = document.querySelector(".main-form");
+
+const form = document.querySelector(".main-form") as Form;
 const startGame = () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const selectCat = document.getElementById("category").value;
-
+    const selectCat = (document.getElementById("category") as SelectOption)
+      .value;
     if (selectCat === "general-knowledge") {
       category = 9;
     } else if (selectCat === "history") {
@@ -41,7 +63,8 @@ const startGame = () => {
       category = 24;
     }
 
-    const selectDif = document.getElementById("difficulty").value;
+    const selectDif = (document.getElementById("difficulty") as SelectOption)
+      .value;
     if (selectDif === "easy") {
       difficulty = "easy";
     } else if (selectDif === "medium") {
@@ -49,7 +72,9 @@ const startGame = () => {
     } else if (selectDif === "hard") {
       difficulty = "hard";
     }
-    const selectNumOfQ = document.getElementById("question-number").value;
+    const selectNumOfQ = (
+      document.getElementById("question-number") as SelectOption
+    ).value;
     if (selectNumOfQ === "ten") {
       amountQuestion = 10;
     } else if (selectNumOfQ === "twenty") {
@@ -57,19 +82,21 @@ const startGame = () => {
     } else if (selectNumOfQ === "thirty") {
       amountQuestion = 30;
     }
-    localStorage.setItem("category", category);
+    localStorage.setItem("category", category.toString());
     localStorage.setItem("difficulty", difficulty);
-    localStorage.setItem("numberOfQ", amountQuestion);
+    localStorage.setItem("numberOfQ", amountQuestion.toString());
     getData();
   });
 };
 
-const displayQuiz = (data) => {
+
+
+const displayQuiz = (data: Data) => {
   let currentQuestionIndex = 0;
-  const showQuestion = (index) => {
+  const showQuestion = (index: Index) => {
     localStorage.setItem("allQuestions", JSON.stringify(data.results));
-    const allQuestions = localStorage.getItem("allQuestions");
-    const questionArr = JSON.parse(allQuestions);
+    const allQuestions = localStorage.getItem("allQuestions") ?? "";
+    const questionArr = JSON.parse(allQuestions) as Results[];
     const currQ = questionArr[index];
     // const question = data.results[index];
     localStorage.setItem("question", currQ.question);
@@ -85,7 +112,8 @@ const displayQuiz = (data) => {
 
     // console.log(messyAnswers)
     //array
-    messyAnswers.forEach((answer) => {
+
+    messyAnswers.forEach((answer: Answer) => {
       const label = document.createElement("label");
       const input = document.createElement("input");
       input.id = "choose-answer";
@@ -118,10 +146,11 @@ const displayQuiz = (data) => {
     const checkAnswerBtn = document.createElement("button");
     checkAnswerBtn.id = "check-answer-btn";
     checkAnswerBtn.innerText = "CHECK ANSWER";
+
     checkAnswerBtn.addEventListener("click", () => {
       const selectedAnswer = document.querySelector(
         'input[name="answer"]:checked'
-      );
+      ) as SelectedAnswer;
       // console.log(selectedAnswer)
 
       if (selectedAnswer) {
@@ -129,7 +158,7 @@ const displayQuiz = (data) => {
         const isCorrect = userAnswer === currQ.correct_answer;
         if (isCorrect) {
           correctAns++;
-          localStorage.setItem("numOfCorrectAns", correctAns);
+          localStorage.setItem("numOfCorrectAns", correctAns.toString());
           correctAnswerArr.push(currQ.question);
           localStorage.setItem(
             "correctAnsQuestion",
@@ -137,7 +166,7 @@ const displayQuiz = (data) => {
           );
         } else {
           wrongAns++;
-          localStorage.setItem("numOfWrongAns", wrongAns);
+          localStorage.setItem("numOfWrongAns", wrongAns.toString());
           failedAnsr.push(currQ);
           // correctedAns.push(currQ.correct_answer)
         }
@@ -151,7 +180,7 @@ const displayQuiz = (data) => {
     answersContainer.appendChild(checkAnswerBtn);
   };
 
-  const displayResult = (isCorrect, questionArr) => {
+  const displayResult = (isCorrect: boolean, questionArr: Results[]) => {
     const resultMessage = document.createElement("p");
     resultMessage.id = "result-message";
     resultMessage.innerText = isCorrect ? "Correct!" : "Wrong!";
@@ -177,14 +206,12 @@ const displayQuiz = (data) => {
         additonalInfo.innerHTML += `<button class='new-game'>NEW GAME</button>`;
         // const newGameB = document.querySelector('.new-game')
         additonalInfo.addEventListener("click", (e) => {
-          if (e.target.classList.contains("new-game")) {
-            newGame();
-          }
-        });
-        additonalInfo.innerHTML += `<button class='download-results'>DOWNLOAD RESULTS</button>`;
-        additonalInfo.addEventListener("click", (e) => {
-          if (e.target.classList.contains("download-results")) {
-            downloadResults();
+          if (e.target instanceof HTMLElement) {
+            if (e.target.classList.contains("new-game")) {
+              newGame();
+            } else if (e.target.classList.contains("download-results")) {
+              downloadResults();
+            }
           }
         });
       }
@@ -199,7 +226,7 @@ const displayQuiz = (data) => {
 };
 
 //mess the arr of answers
-const messyArr = (array) => {
+const messyArr = (array: Array<string>) => {
   return array.sort(() => Math.random() - 0.5);
 };
 const newGame = () => {
@@ -219,15 +246,26 @@ const newGame = () => {
 };
 
 const downloadResults = () => {
-  const numOfCorrectAns = JSON.parse(localStorage.getItem("numOfCorrectAns"));
-  const numOfWrongAns = JSON.parse(localStorage.getItem("numOfWrongAns"));
-  worker.onmessage = (e) => {
-    const blob = e.data;
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "QuizScore.zip";
-    link.click();
-  };
-  worker.postMessage({ numOfCorrectAns, numOfWrongAns });
+  const numOfCorrectAnsString = localStorage.getItem("numOfCorrectAns");
+  const numOfWrongAnsString = localStorage.getItem("numOfWrongAns");
+
+  if (numOfCorrectAnsString !== null && numOfWrongAnsString !== null) {
+    const numOfCorrectAns = JSON.parse(numOfCorrectAnsString);
+    const numOfWrongAns = JSON.parse(numOfWrongAnsString);
+
+    worker.onmessage = (e) => {
+      const blob = e.data;
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "QuizScore.zip";
+      link.click();
+    };
+    worker.postMessage({ numOfCorrectAns, numOfWrongAns });
+  } else {
+    console.error(
+      "Error: Unable to retrieve correct or wrong answer counts from local storage"
+    );
+  }
 };
+
 startGame();
