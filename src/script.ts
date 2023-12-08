@@ -15,10 +15,11 @@ interface Results {
   difficulty: string;
   category: string;
   question: string;
+  
   correct_answer: string;
   incorrect_answers: string[];
 }
-const worker = new Worker("worker.js", { type: "module" });
+const worker = new Worker("dist/worker.js", { type: "module" });
 let amountQuestion: number = 10;
 let category: string | number = 9;
 let difficulty: string = "easy";
@@ -89,8 +90,6 @@ const startGame = () => {
   });
 };
 
-
-
 const displayQuiz = (data: Data) => {
   let currentQuestionIndex = 0;
   const showQuestion = (index: Index) => {
@@ -101,17 +100,10 @@ const displayQuiz = (data: Data) => {
     // const question = data.results[index];
     localStorage.setItem("question", currQ.question);
 
-    // console.log(question)
-    // object
     const answersContainer = document.createElement("div");
     answersContainer.id = "answers-container";
     const allAnswers = [currQ.correct_answer, ...currQ.incorrect_answers];
-    // console.log(allAnswers)
-    // array
     const messyAnswers = messyArr(allAnswers);
-
-    // console.log(messyAnswers)
-    //array
 
     messyAnswers.forEach((answer: Answer) => {
       const label = document.createElement("label");
@@ -134,11 +126,9 @@ const displayQuiz = (data: Data) => {
     result.innerHTML = `<span class="q-number">${index + 1}.</span> ${
       currQ.question
     }`;
-    // console.log(result)
     possibleAns.innerHTML = "";
 
     possibleAns.appendChild(answersContainer);
-    // console.log(possibleAns)
     questionContainer.appendChild(result);
     questionContainer.appendChild(possibleAns);
     questionContainer.appendChild(additonalInfo);
@@ -151,8 +141,6 @@ const displayQuiz = (data: Data) => {
       const selectedAnswer = document.querySelector(
         'input[name="answer"]:checked'
       ) as SelectedAnswer;
-      // console.log(selectedAnswer)
-
       if (selectedAnswer) {
         const userAnswer = selectedAnswer.value;
         const isCorrect = userAnswer === currQ.correct_answer;
@@ -203,17 +191,23 @@ const displayQuiz = (data: Data) => {
         failedAnsr.forEach((q) => {
           additonalInfo.innerHTML += `<li>${q.question} </li> Correct answer:  ${q.correct_answer}`;
         });
-        additonalInfo.innerHTML += `<button class='new-game'>NEW GAME</button>`;
-        // const newGameB = document.querySelector('.new-game')
-        additonalInfo.addEventListener("click", (e) => {
-          if (e.target instanceof HTMLElement) {
-            if (e.target.classList.contains("new-game")) {
-              newGame();
-            } else if (e.target.classList.contains("download-results")) {
-              downloadResults();
-            }
-          }
-        });
+        additonalInfo.innerHTML += "<button class='new-game'>NEW GAME</button>";
+        additonalInfo.innerHTML +=
+          "<button class='download-results'>DOWNLOAD RESULTS</button>";
+
+        const newGameBtn = document.querySelector(".new-game");
+        if (newGameBtn) {
+          newGameBtn.addEventListener("click", () => {
+            newGame();
+          });
+        }
+
+        const downloadResultsBtn = document.querySelector(".download-results");
+        if (downloadResultsBtn) {
+          downloadResultsBtn.addEventListener("click", () => {
+            downloadResults();
+          });
+        }
       }
     });
 
