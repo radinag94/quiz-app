@@ -15,7 +15,7 @@ interface Results {
   difficulty: string;
   category: string;
   question: string;
-  
+
   correct_answer: string;
   incorrect_answers: string[];
 }
@@ -121,6 +121,12 @@ const displayQuiz = (data: Data) => {
       label.appendChild(span);
 
       answersContainer.appendChild(label);
+      input.addEventListener("change", () => {
+        const radioButtons = document.querySelectorAll('input[name="answer"]');
+        radioButtons.forEach((radio) => {
+          (radio as HTMLInputElement).disabled = true;
+        });
+      });
     });
 
     result.innerHTML = `<span class="q-number">${index + 1}.</span> ${
@@ -132,18 +138,21 @@ const displayQuiz = (data: Data) => {
     questionContainer.appendChild(result);
     questionContainer.appendChild(possibleAns);
     questionContainer.appendChild(additonalInfo);
+    let answerChecked = false;
     // create chechAnswerBtn and addEventlistener
     const checkAnswerBtn = document.createElement("button");
     checkAnswerBtn.id = "check-answer-btn";
     checkAnswerBtn.innerText = "CHECK ANSWER";
 
     checkAnswerBtn.addEventListener("click", () => {
+      if(!answerChecked) {
       const selectedAnswer = document.querySelector(
         'input[name="answer"]:checked'
       ) as SelectedAnswer;
       if (selectedAnswer) {
         const userAnswer = selectedAnswer.value;
         const isCorrect = userAnswer === currQ.correct_answer;
+        answerChecked=true
         if (isCorrect) {
           correctAns++;
           localStorage.setItem("numOfCorrectAns", correctAns.toString());
@@ -163,7 +172,7 @@ const displayQuiz = (data: Data) => {
       } else {
         alert("Please select one answer.");
       }
-    });
+  }});
 
     answersContainer.appendChild(checkAnswerBtn);
   };

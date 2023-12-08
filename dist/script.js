@@ -104,6 +104,12 @@ const displayQuiz = (data) => {
             label.appendChild(input);
             label.appendChild(span);
             answersContainer.appendChild(label);
+            input.addEventListener("change", () => {
+                const radioButtons = document.querySelectorAll('input[name="answer"]');
+                radioButtons.forEach((radio) => {
+                    radio.disabled = true;
+                });
+            });
         });
         result.innerHTML = `<span class="q-number">${index + 1}.</span> ${currQ.question}`;
         possibleAns.innerHTML = "";
@@ -111,31 +117,35 @@ const displayQuiz = (data) => {
         questionContainer.appendChild(result);
         questionContainer.appendChild(possibleAns);
         questionContainer.appendChild(additonalInfo);
+        let answerChecked = false;
         // create chechAnswerBtn and addEventlistener
         const checkAnswerBtn = document.createElement("button");
         checkAnswerBtn.id = "check-answer-btn";
         checkAnswerBtn.innerText = "CHECK ANSWER";
         checkAnswerBtn.addEventListener("click", () => {
-            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
-            if (selectedAnswer) {
-                const userAnswer = selectedAnswer.value;
-                const isCorrect = userAnswer === currQ.correct_answer;
-                if (isCorrect) {
-                    correctAns++;
-                    localStorage.setItem("numOfCorrectAns", correctAns.toString());
-                    correctAnswerArr.push(currQ.question);
-                    localStorage.setItem("correctAnsQuestion", JSON.stringify(correctAnswerArr));
+            if (!answerChecked) {
+                const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+                if (selectedAnswer) {
+                    const userAnswer = selectedAnswer.value;
+                    const isCorrect = userAnswer === currQ.correct_answer;
+                    answerChecked = true;
+                    if (isCorrect) {
+                        correctAns++;
+                        localStorage.setItem("numOfCorrectAns", correctAns.toString());
+                        correctAnswerArr.push(currQ.question);
+                        localStorage.setItem("correctAnsQuestion", JSON.stringify(correctAnswerArr));
+                    }
+                    else {
+                        wrongAns++;
+                        localStorage.setItem("numOfWrongAns", wrongAns.toString());
+                        failedAnsr.push(currQ);
+                        // correctedAns.push(currQ.correct_answer)
+                    }
+                    displayResult(isCorrect, questionArr);
                 }
                 else {
-                    wrongAns++;
-                    localStorage.setItem("numOfWrongAns", wrongAns.toString());
-                    failedAnsr.push(currQ);
-                    // correctedAns.push(currQ.correct_answer)
+                    alert("Please select one answer.");
                 }
-                displayResult(isCorrect, questionArr);
-            }
-            else {
-                alert("Please select one answer.");
             }
         });
         answersContainer.appendChild(checkAnswerBtn);
