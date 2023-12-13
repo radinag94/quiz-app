@@ -172,6 +172,7 @@ const displayQuiz = (data) => {
                 failedAnsr.forEach((q) => {
                     additonalInfo.innerHTML += `<li>${q.question} </li> Correct answer:  ${q.correct_answer}`;
                 });
+                displayDogFact();
                 additonalInfo.innerHTML += "<button class='new-game'>NEW GAME</button>";
                 additonalInfo.innerHTML +=
                     "<button class='download-results'>DOWNLOAD RESULTS</button>";
@@ -233,4 +234,43 @@ const downloadResults = () => {
         console.error("Error: Unable to retrieve correct or wrong answer counts from local storage");
     }
 };
+const fetchDogFact = () => __awaiter(void 0, void 0, void 0, function* () {
+    const apiUrl = "https://dogapi.dog/api/v2/facts";
+    try {
+        const response = yield fetch(apiUrl, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+        const data = yield response.json();
+        if (data.data && data.data.length > 0) {
+            return data.data[0].attributes.body;
+        }
+        else {
+            throw new Error("Empty response from the API");
+        }
+    }
+    catch (error) {
+        console.error(`Error fetching dog fact: ${error}`);
+        return "Failed to fetch a dog fact.";
+    }
+});
+const displayDogFact = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const dogFact = yield fetchDogFact();
+        const dogFactParagraph = document.createElement("p");
+        dogFactParagraph.innerHTML = `Dog Fact: ${dogFact}`;
+        additonalInfo.appendChild(dogFactParagraph);
+    }
+    catch (error) {
+        console.error("Error:", error);
+    }
+});
 startGame();
